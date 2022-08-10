@@ -1,0 +1,20 @@
+{
+    "228075": {
+        "name": "16mm独角兽戒指18件套",
+        "owner": "qxoom",
+        "descs": [
+            "数量：18个款式，每款1只，共18只",
+            "尺寸：戒指宝石内径为：16mm，戒指圈内径为15mm",
+            "包装：先独立包装，然后18个款式每款1只混装"
+        ],
+        "images": ["https://cbu01.alicdn.com/img/ibank/O1CN018pctji1SrRhoC0Y3v_!!2891982300-0-cib.jpg"]
+    },
+    "212001": {
+        "name": "独角兽7件套",
+        "owner": "qxoom",
+        "descs": [
+            "数量：18个款式，每款1只，共18只"
+        ],
+        "images": ["https://cbu01.alicdn.com/img/ibank/O1CN01xM9l2a1SrRhqK7kfq_!!2891982300-0-cib.jpg_.webp"]
+    }
+}

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+	<head>
+        <base href="../../" />
+		<meta charset="utf-8"/>
+		<meta name="viewport" content="width=device-width,initial-scale=1">
+		<link href="/favicon.ico" rel="shortcut icon" type="image/x-icon"/>
+		<link href="https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/element-ui/2.15.7/theme-chalk/index.min.css" type="text/css" rel="stylesheet" />
+		<link rel="stylesheet" href="product/assets/base.css"/>
+        <link rel="stylesheet" href="product/theme/index.css">
+		<title>产品主题</title>
+	</head>
+	<body>
+		<div id="app" v-cloak>
+			<el-container>
+				<el-main class="content-main">
+					<el-container>
+						<!-- <el-header class="content-header" id="frame-header" height="40px" shadow="always">
+							<el-col :span="14">
+                                <el-form :inline="true" size="mini" @submit.native.prevent>
+                                    <el-form-item>
+                                        <el-button type="primary" :loading="isUnderDownloading" @click="handleUpdateShapeList">更新</el-button>
+                                    </el-form-item>
+                                </el-form>
+                              </el-col>
+                              <el-col :span="10"></el-col>
+						</el-header> -->
+						<el-main id="frame-main">
+							<el-container>
+                                <el-table :data="themes" :default-sort = "{prop: 'code', order: 'descending'}" stripe style="width: 100%;" height="100%" row-key="code" :highlight-current-row="true">
+                                    <el-table-column prop="code" sortable label="主题编号" width="100"></el-table-column>
+                                    <el-table-column prop="name" label="名称" width="200"></el-table-column>
+                                    <el-table-column prop="owner" sortable label="归属客户" width="200"></el-table-column>
+                                    <el-table-column prop="images" label="参考图片">
+                                        <template slot-scope="scope">
+											<el-image class="theme-image" v-for="image in scope.row.images" :src="image" style="height: 60px;" :preview-src-list="scope.row.images"></el-image>
+                                        </template>
+                                    </el-table-column>
+									<el-table-column prop="description" label="描述"></el-table-column>
+                                </el-table>
+                            </el-container>
+						</el-main>
+					  </el-container>
+				</el-main>
+			</el-container>
+		</div>
+		<!-- Vue -->
+		<script src="https://lf6-cdn-tos.bytecdntp.com/cdn/expire-1-M/vue/2.6.14/vue.min.js" type="application/javascript"></script>
+        <script type="text/javascript">window.Vue || document.write('<script type="text/javascript" src="ajax/libs/vue/2.6.12/vue.min.js"><\/script>');</script>
+        <!-- Element UI -->
+        <script src="https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/element-ui/2.15.7/index.min.js" type="application/javascript"></script>
+        <script type="text/javascript">
+        window.ELEMENT || document.write(
+            '<link rel="stylesheet" href="ajax/libs/element-ui/2.15.7/theme-chalk/index.min.css"/>'
+            +'<script type="text/javascript" src="ajax/libs/element-ui/2.15.7/index.min.js"><\/script>'
+        );
+        </script>
+        <!-- CryptoJS -->
+        <script src="https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/crypto-js/4.1.1/crypto-js.min.js" type="application/javascript"></script>
+        <script type="text/javascript">window.CryptoJS || document.write('<script type="text/javascript" src="ajax/libs/crypto-js/4.1.1/crypto-js.min.js"><\/script>');</script>
+        <!-- Axios -->
+        <script src="https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/axios/0.26.0/axios.min.js" type="application/javascript"></script>
+        <script type="text/javascript">window.axios || document.write('<script type="text/javascript" src="ajax/libs/axios/0.21.1/axios.min.js"><\/script>');</script>
+        <script type="text/javascript" src="product/theme/index.js"></script>
+	</body>
+</html>

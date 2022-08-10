@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+	<head>
+		<meta charset="utf-8"/>
+        <base href="../../" />
+		<link href="/favicon.ico" rel="shortcut icon" type="image/x-icon"/>
+        <link href="https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/element-ui/2.15.7/theme-chalk/index.min.css" type="text/css" rel="stylesheet" />
+        <link rel="stylesheet" href="product/image/index.css">
+		<title>产品图生成器</title>
+	</head>
+	<body>
+		<div id="app" v-cloak>
+			<el-container>
+                <el-aside width="270px" style="/*margin-left: 12px;*/" id="options-container">
+                    <el-container>
+                        <el-header height="220" id="source-container"> <!--style="padding: 0 10px;"-->
+                            <div class="container-item-header">
+                                <div class="container-item-title" style="width: 100px;">设置</div>
+                                <div class="item-header-form" style="flex-grow: 1;"></div>
+                            </div>
+                            <div class="container-item-main" style="padding: 10px;">
+                                <el-form size="mini" :inline="false" label-width="60px">
+                                    <el-form-item label="主题编号">
+                                        <el-input name="themeCode" v-model="options.themeCode" maxlength="3" minlength="3" placeholder="长度为3个字符" @change="handleThemeCodeChange"></el-input>
+                                    </el-form-item>
+                                    <el-form-item label="合成模式">
+                                        <el-radio-group v-model="options.composeModel" @change="handleComposeModelChange">
+                                            <el-radio :label="0">精简</el-radio>
+                                            <el-radio :label="1">完整</el-radio>
+                                        </el-radio-group>
+                                    </el-form-item>
+                                    <el-form-item label="图片尺寸">
+                                        <el-radio-group v-model="options.imageSize">
+                                            <el-radio label="8x">8x</el-radio>
+                                            <el-radio label="10x">10x</el-radio>
+                                        </el-radio-group>
+                                    </el-form-item>
+                                </el-form>
+                            </div>
+                        </el-header>
+                        <el-main style="padding: 0; background: white;">
+                            <div class="container-item-header">
+                                <div class="container-item-title">原图</div>
+                                <input type="file" id="sourceFileSelector" ref="sourceFileSelector" multiple accept="image/*" class="visually-hidden" @change="handleSourceChange()" style="display: none;"/>
+                                <label for="sourceFileSelector" class="text-button el-button el-button--text el-button--small">选择</label>
+                                <el-button class="text-button " type="text" size="small" @click="handleSourceClean">清空</el-button>
+                            </div>
+                            <div class="container-item-main" v-loading.lock="sourceLoading">
+                                <ul class="source-image-list">
+                                    <li v-for="(image,index) in sources" class="source-image-item">
+                                        <el-image :src="image.url" :id="'source-' + image.code" class="source-image" :preview-src-list="sourceImageUrls" @load="handleSourceLoad($event, image, index)"></el-image>
+                                    </li>
+                                </ul>
+                            </div>
+                        </el-main>
+                    </el-container>
+                </el-aside>
+                <el-container>
+                <el-aside width="640px" style="margin-left: 10px;">
+                    <el-container>
+                        <!-- <el-header height="40%" id="source-container">
+                            <div class="container-item-header">
+                                <div class="container-item-title">原图</div>
+                                <input type="file" id="sourceFileSelector" ref="sourceFileSelector" multiple accept="image/*" class="visually-hidden" @change="handleSourceChange()" style="display: none;"/>
+                                <label for="sourceFileSelector" class="text-button el-button el-button--text el-button--small">选择</label>
+                                <el-button class="text-button " type="text" size="small" @click="handleSourceClean">清空</el-button>
+                            </div>
+                            <div class="container-item-main" v-loading.lock="sourceLoading">
+                                <ul class="source-image-list">
+                                    <li v-for="(image,index) in sources" class="source-image-item">
+                                        <el-image :src="image.url" :id="'source-' + image.code" class="source-image" :preview-src-list="sourceImageUrls" @load="handleSourceLoad($event, image, index)"></el-image>
+                                    </li>
+                                </ul>
+                            </div>
+                        </el-header> -->
+                        <el-main id="tpl-container">
+                            <div class="container-item-header">
+                                <div class="container-item-title" style="width: 80px;">模版</div>
+                                <div style="flex-grow: 1;">
+                                    <el-select v-model="categoryName" size="mini" placeholder="模版分类" style="width: 120px;">
+                                        <el-option key="项链" label="项链" value="necklaces"></el-option>
+                                        <el-option key="戒指" label="戒指" value="rings"></el-option>
+                                        <el-option key="耳饰" label="耳饰" value="earrings"></el-option>
+                                        <el-option key="钥匙链" label="钥匙链" value="keyrings"></el-option>
+                                        <el-option key="胸针" label="胸针" value="brooches"></el-option>
+                                        <el-option key="夹片手链" label="夹片手链" value="夹片手链"></el-option>
+                                        <el-option key="合金手镯" label="合金手镯" value="合金手镯"></el-option>
+                                        <el-option key="牛皮手链" label="牛皮手链" value="cow-bracelets"></el-option>
+                                        <el-option key="绒绳手链" label="绒绳手链" value="绒绳手链"></el-option>
+                                        <el-option key="弹力绳手链" label="弹力绳手链" value="弹力绳手链"></el-option>
+                                        <el-option key="金刚结手链" label="金刚结手链" value="pingjie-bracelets"></el-option>
+                                        <el-option key="绑绳手链" label="绑绳手链" value="simple-bracelets"></el-option>
+                                        <el-option key="袖扣" label="袖扣" value="袖扣"></el-option>
+                                    </el-select>
+                                </div>
+                                <el-link href="index.html?_path_=generator/image/tpl.list.html" target="_blank">模板列表</el-link>
+                            </div>
+                            <div class="container-item-main"><!--@current-change="handleSuitTablCurrentChange"   @select="handleTableSelect"-->
+                                <el-table :data="tplSuits" ref="tplSuitsTable" style="width: 100%;" row-key="_id" current-row-key="1" :highlight-current-row="false" :show-header="false" @selection-change="handleSelectionChange">
+                                    <el-table-column fixed type="selection" :reserve-selection="true" width="30" align="center" :selectable="isRowSelectable">
+                                    </el-table-column>
+                                    <el-table-column fixed prop="code" label="编号" width="42" align="center">
+                                        <template slot-scope="scope">
+                                            <!-- <input name="tplName" v-model="scope.row.code" class="file-name" @change="handleSuitCodeChange"/> -->
+                                            <span>{{scope.row.code}}</span>
+                                        </template>
+                                    </el-table-column>
+                                    <el-table-column prop="label" label="模版名称" width="185"></el-table-column>
+                                    <el-table-column label="图片">
+                                        <template slot-scope="scope">
+                                            <div class="tpl-image-list">
+                                                <div v-for="(tpl, index) in scope.row.templates" class="tpl-image-item" style="margin:0; padding:0; border:none;">
+                                                    <template v-if="tpl.background">
+                                                        <el-image :id="'background-'+scope.row.code+'-'+tpl.name" :data-id="scope.row._id" class="tpl-image"  :src="tplPath + tpl.background" :preview-src-list="[tplPath + tpl.background]" @load="handleBackgroundImageLoad($event, tpl)" :title="tpl.name" style="margin:0 5px;"></el-image>
+                                                    </template>
+                                                    <template v-if="tpl.watermark">
+                                                        <el-image :id="'watermark-'+scope.row.code+'-'+tpl.name" :data-id="scope.row._id" class="tpl-mark" :src="tplPath + tpl.watermark" @load="handleTplMarkLoad($event, tpl)"></el-image>
+                                                    </template>
+                                                    <template v-if="tpl.foreground">
+                                                        <el-image :id="'foreground-'+scope.row.code+'-'+tpl.name" :data-id="scope.row._id" class="tpl-image"  :src="tplPath + tpl.foreground" :preview-src-list="[tplPath + tpl.foreground]" @load="handleForegroundImageLoad($event, tpl)" :title="tpl.name" style="margin:0 5px;"></el-image>
+                                                    </template>
+                                                </div>
+                                            </div>
+                                        </template>
+                                    </el-table-column>
+                                </el-table>
+                            </div>
+                        </el-main>
+                    </el-container>
+                </el-aside>
+				<el-main class="content-main" id="main-container-right">
+                    <el-container> <!-- direction -->
+                        <el-container>
+                            <el-main id="preview-container">
+                                <div class="container-item" style="display: flex;">
+                                    <div class="container-item-header">
+                                        <div class="container-item-title" style="width: 100px;">预览</div>
+                                        <!-- <el-button ref="updatePreviewButton" class="text-button" type="text" size="small" @click="updatePreviewImages">刷新</el-button> -->
+                                        <el-button type="text" size="small" class="text-button" @click="imageExportHandle">下载</el-button>
+                                    </div>
+                                    <div class="container-item-main" v-loading.lock="previewLoading">
+                                        <canvas id="canvas" style="display: none;" width="1000" height="1000"></canvas>
+                                        <canvas id="canvas-8x" style="display: none;" width="800" height="800"></canvas>
+                                        <canvas id="canvas-10x" style="display: none;" width="1000" height="1000"></canvas>
+                                        <ul class="preview-image-list">
+                                            <li v-for="preview in previews" class="preview-image-item">
+                                                <el-checkbox class="preview-checkbox"></el-checkbox>
+                                                <div>
+                                                    <el-image :src="preview.src" id="'preview' + preview.code" :data-title="options.themeCode+preview.title" class="preview-image" @load="handlePreviewImageLoad" :preview-src-list="previewImageUrls"></el-image>
+                                                </div>
+                                                <el-row style="margin-bottom: 5px;">
+                                                    <el-col :span="24" style="text-align: center;">
+                                                        <span style="padding:0 5px; margin-left:5px; font-size: 14px;">
+                                                            {{options.themeCode}}{{preview.title}}
+                                                        </span>
+                                                    </el-col>
+                                                </el-row>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </el-main>
+                        </el-container>
+
+                        
+                        
+                    </el-container>
+				</el-main>
+                </el-container>
+			</el-container>
+		</div>
+        <!-- Vue -->
+        <script src="https://lf6-cdn-tos.bytecdntp.com/cdn/expire-1-M/vue/2.6.14/vue.min.js" type="application/javascript"></script>
+        <script type="text/javascript">window.Vue || document.write('<script type="text/javascript" src="ajax/libs/vue/2.6.12/vue.min.js"><\/script>');</script>
+        <!-- Element UI -->
+        <script src="https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/element-ui/2.15.7/index.min.js" type="application/javascript"></script>
+        <script type="text/javascript">
+        window.ELEMENT || document.write(
+            '<link rel="stylesheet" href="ajax/libs/element-ui/2.15.7/theme-chalk/index.min.css"/>'
+            +'<script type="text/javascript" src="ajax/libs/element-ui/2.15.7/index.min.js"><\/script>'
+        );
+        </script>
+        <!-- FileSaver -->
+        <script src="https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/FileSaver.js/2.0.5/FileSaver.min.js" type="application/javascript"></script>
+        <script type="text/javascript">window.FileSaver || document.write('<script type="text/javascript" src="ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"><\/script>');</script>
+        <!-- CryptoJS -->
+        <script src="https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/crypto-js/4.1.1/crypto-js.min.js" type="application/javascript"></script>
+        <script type="text/javascript">window.CryptoJS || document.write('<script type="text/javascript" src="ajax/libs/crypto-js/4.1.1/crypto-js.min.js"><\/script>');</script>
+        <!-- Axios -->
+        <script src="https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/axios/0.26.0/axios.min.js" type="application/javascript"></script>
+        <script type="text/javascript">window.axios || document.write('<script type="text/javascript" src="ajax/libs/axios/0.21.1/axios.min.js"><\/script>');</script>
+        <script src="assets/base.js"></script>
+        <script src="product/image/index.js"></script>
+	</body>
+</html>

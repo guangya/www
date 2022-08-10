@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+	<head>
+        <base href="../../" />
+		<meta charset="utf-8"/>
+		<meta name="viewport" content="width=device-width,initial-scale=1">
+		<link href="/favicon.ico" rel="shortcut icon" type="image/x-icon"/>
+		<link href="https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/element-ui/2.15.7/theme-chalk/index.min.css" type="text/css" rel="stylesheet" />
+        <link rel="stylesheet" href="product/carton-size/index.css">
+		<title>装箱记录</title>
+	</head>
+	<body>
+		<div id="app" v-cloak>
+			<el-container>
+				<el-main class="content-main">
+					<el-container>
+						<el-main id="frame-main">
+							<el-container>
+                                <el-table :data="data" :default-sort = "{prop: 'name', order: 'ascending'}" stripe style="width: 100%;" height="100%" row-key="code" :highlight-current-row="true">
+                                    <el-table-column prop="name" sortable label="产品名称" width="200"></el-table-column>
+                                    <el-table-column prop="quantity" label="数量" width="100"></el-table-column>
+									<el-table-column prop="weight" label="毛重（kg）" width="100"></el-table-column>
+									<el-table-column label="单件毛重（g）" width="120">
+										<template slot-scope="scope">
+											{{Math.floor(scope.row.weight / scope.row.quantity * 100000)/100}}
+                                        </template>
+									</el-table-column>
+                                    <el-table-column prop="length" label="长（cm）" width="100"></el-table-column>
+									<el-table-column prop="width" label="宽（cm）" width="100"></el-table-column>
+									<el-table-column prop="height" label="高（cm）" width="100"></el-table-column>
+									<el-table-column prop="packing" label="打包备注" width="200"></el-table-column>
+									<el-table-column prop="desc" label="描述"></el-table-column>
+									<el-table-column label="操作" width="100">
+										<template slot-scope="scope">
+											<el-button type="text" @click="copy(scope.row)">复制</el-button>
+                                        </template>
+									</el-table-column>
+                                </el-table>
+                            </el-container>
+						</el-main>
+					  </el-container>
+				</el-main>
+			</el-container>
+		</div>
+		<!-- Vue -->
+		<script src="https://lf6-cdn-tos.bytecdntp.com/cdn/expire-1-M/vue/2.6.14/vue.min.js" type="application/javascript"></script>
+        <script type="text/javascript">window.Vue || document.write('<script type="text/javascript" src="ajax/libs/vue/2.6.12/vue.min.js"><\/script>');</script>
+        <!-- Element UI -->
+        <script src="https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/element-ui/2.15.7/index.min.js" type="application/javascript"></script>
+        <script type="text/javascript">
+        window.ELEMENT || document.write(
+            '<link rel="stylesheet" href="ajax/libs/element-ui/2.15.7/theme-chalk/index.min.css"/>'
+            +'<script type="text/javascript" src="ajax/libs/element-ui/2.15.7/index.min.js"><\/script>'
+        );
+        </script>
+        <!-- CryptoJS -->
+        <script src="https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/crypto-js/4.1.1/crypto-js.min.js" type="application/javascript"></script>
+        <script type="text/javascript">window.CryptoJS || document.write('<script type="text/javascript" src="ajax/libs/crypto-js/4.1.1/crypto-js.min.js"><\/script>');</script>
+        <!-- Axios -->
+        <script src="https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/axios/0.26.0/axios.min.js" type="application/javascript"></script>
+        <script type="text/javascript">window.axios || document.write('<script type="text/javascript" src="ajax/libs/axios/0.21.1/axios.min.js"><\/script>');</script>
+		<!-- <script type="text/javascript" src="assets/js/base.js"></script> -->
+        <script type="text/javascript" src="product/carton-size/index.js"></script>
+	</body>
+</html>

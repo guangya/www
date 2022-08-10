@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+	<head>
+		<meta charset="utf-8"/>
+        <base href="../../" />
+		<link href="/favicon.ico" rel="shortcut icon" type="image/x-icon"/>
+        <link href="https://fonts.font.im/css?family=Noto+Serif" rel="stylesheet">
+        <link href="https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/element-ui/2.15.7/theme-chalk/index.min.css" type="text/css" rel="stylesheet" />
+		<!-- <link rel="stylesheet" href="ajax/libs/element-ui/2.15.7/theme-chalk/index.min.css"/> -->
+        <link rel="stylesheet" href="product/album/index.css">
+		<title>产品相册</title>
+	</head>
+	<body>
+<div id="app" v-cloak ondrop="dropHandler(event);" ondragover="dragOverHandler(event);" v-cloak>
+    <el-container id="main-container">
+        <el-aside width="240px" style="height: 100%; background-color:white;">
+            <div class="section">
+                <div class="section-header" class="clearfix">
+                    <span style="font-size: 12px;">设置</span>
+                </div>
+                <div class="section-body">
+                    <el-form :inline="false" :model="options" size="mini" label-width="62px">
+                        <el-form-item label="主题编号">
+                            <el-input v-model="options.themeCode" placeholder="201001" maxlength="6"></el-input>
+                        </el-form-item>
+                        <el-form-item label="副标题">
+                            <el-input v-model="options.title" placeholder=""></el-input>
+                        </el-form-item>
+                        <el-form-item label="行间距">
+                            <el-input v-model="options.columnSpace" placeholder="10" >
+                                <template slot="suffix">像素</template>
+                            </el-input>
+                        </el-form-item>
+                        <el-form-item label="排序">
+                            <el-radio-group v-model="options.sortType" @change="sortTypeChangeHandle">
+                                <el-radio label="SORT_BY_GROUP">默认</el-radio>
+                                <el-radio label="SORT_BY_SUBCODE">子编号</el-radio>
+                            </el-radio-group>
+                        </el-form-item>
+                        <el-form-item label="列数">
+                            <!-- <el-input v-model="options.columns" placeholder="4"></el-input> -->
+                            <!-- <el-slider v-model="options.columns" :min="1" :max="20" @change="columnsChangeHandler"></el-slider> -->
+                            <el-input-number v-model="options.columns" @change="columnsChangeHandle" :precision="0" :step="1" :min="1" :max="20"></el-input-number>
+                        </el-form-item>
+                        <el-form-item label="缩放比例">
+                            <!-- <el-slider v-model="options.scale" :min="1" :max="20" @change="scaleHandler"></el-slider> -->
+                            <el-input-number v-model="options.scale" @change="scaleChangeHandle" :precision="0" :step="1" :min="1" :max="20"></el-input-number>
+                        </el-form-item>
+                        <el-form-item label="图片尺寸">
+                            <span style="color: #606266;">${options.canvasWidth} * ${options.canvasHeight} 像素</span>
+                            <!-- <el-col :span="11">
+                                <el-input v-model="options.canvasWidth" :disabled="true" placeholder="自动生成">
+                                    <template slot="suffix">像素</template>
+                                </el-input>
+                            </el-col>
+                            <el-col class="line" :span="2" style="text-align: center;">*</el-col>
+                            <el-col :span="11">
+                                <el-input v-model="options.canvasHeight" :disabled="true" placeholder="自动生成">
+                                    <template slot="suffix">像素</template>
+                                </el-input>
+                            </el-col> -->
+                        </el-form-item>
+                        <el-form-item label="采购数量">
+                            <el-radio-group v-model="options.quantityShow">
+                                <el-radio :label="false">隐藏</el-radio>
+                                <el-radio :label="true">显示</el-radio>
+                            </el-radio-group>
+                        </el-form-item>
+                        <el-form-item label="计量单位" v-show="options.quantityShow">
+                            <el-select v-model="options.unitName" placeholder="请选择" style="width: 100%;">
+                                <el-option key="个" label="个" value="个"></el-option>
+                                <el-option key="条" label="条" value="条"></el-option>
+                                <el-option key="只" label="只" value="只"></el-option>
+                                <el-option key="套" label="套" value="套"></el-option>
+                                <el-option key="包" label="包" value="包"></el-option>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item>
+                            <el-button type="primary" @click="imageDownloadHandler" :disabled="!images.length">下载</el-button>
+                            <!-- <el-button type="success" @click="refreshHandler" :disabled="!images.length">刷新</el-button> -->
+                            <el-button @click="clearHandler" :disabled="!images.length">清空</el-button>
+                        </el-form-item>
+                    </el-form>
+                </div>
+            </div>
+        </el-aside>
+        <el-main style="margin-left:10px; padding: 0px; background-color: white;">
+            <div class="section" style="width: 100%; height: 100%;">
+                <div class="section-header">
+                    <span>预览</span>
+                </div>
+                <div class="section-body">
+                    <div style="width: 100%; height:100%; overflow: auto;">
+                        <ul id="design-list" v-if="images.length>0" :style="'width:' + designsWrapperWidth + 'px'">
+                            <template v-for="(image,index) of images" >
+                                <li class="design-item" @dblclick="handleImageRemove(index)" v-if="!image.hidden" title="双击删除">
+                                    <p class="design-image-wrapper"><img :src="image.url" /></p>
+                                    <p class="design-name">
+                                        <span contenteditable="true" class="editable-text">${image.name}</span>
+                                        <span v-show="options.quantityShow">-</span>
+                                        <span v-show="options.quantityShow" contenteditable="true" class="editable-text">${image.quantity}</span><span class="unit-name" v-show="options.quantityShow">${options.unitName}</span>
+                                    </p>
+                                </li>
+                                <li class="design-item hidden" v-else>
+                                    <p class="design-image-wrapper"><img src="" /></p>
+                                    <p class="design-name"></p>
+                                </li>
+                            </template>
+                        </ul>
+                        <el-empty class="design-list-empty" v-else description="拖放产品图片到这里"></el-empty>
+                    </div>
+                </div>
+            </div>
+
+        </el-main>
+    </el-container>
+</div>
+<script src="https://lf6-cdn-tos.bytecdntp.com/cdn/expire-1-M/vue/2.6.14/vue.min.js" type="application/javascript"></script>
+<script type="text/javascript">window.Vue || document.write('<script type="text/javascript" src="ajax/libs/vue/2.6.12/vue.min.js"><\/script>');</script>
+<script src="https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/element-ui/2.15.7/index.min.js" type="application/javascript"></script>
+<script type="text/javascript">
+window.ELEMENT || document.write(
+    '<link rel="stylesheet" href="ajax/libs/element-ui/2.15.7/theme-chalk/index.min.css"/>'
+    +'<script type="text/javascript" src="ajax/libs/element-ui/2.15.7/index.min.js"><\/script>'
+);
+</script>
+<script src="https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/FileSaver.js/2.0.5/FileSaver.min.js" type="application/javascript"></script>
+<script type="text/javascript">window.FileSaver || document.write('<script type="text/javascript" src="ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"><\/script>');</script>
+<script src="https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/html-to-image/1.9.0/html-to-image.min.js" type="application/javascript"></script>
+<script type="text/javascript">window.htmlToImage || document.write('<script type="text/javascript" src="ajax/libs/html-to-image/1.9.0/html-to-image.min.js"><\/script>');</script>
+<script src="product/album/index.js"></script>
+</body>
+</html>

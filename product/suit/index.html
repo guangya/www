@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+	<head>
+        <base href="../../" />
+		<meta charset="utf-8"/>
+		<meta name="viewport" content="width=device-width,initial-scale=1">
+		<link href="/favicon.ico" rel="shortcut icon" type="image/x-icon"/>
+		<link href="https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/element-ui/2.15.7/theme-chalk/index.min.css" type="text/css" rel="stylesheet" />
+		<!-- <link rel="stylesheet" href="assets/base.css"/> -->
+        <link rel="stylesheet" href="product/suit/index.css">
+		<title>产品主题</title>
+	</head>
+	<body>
+        <div id="app" v-cloak style="height: 100%; width: 100%;">
+            <el-container id="app-container" style="height: 100%; width: 100%; display: flex;">
+                <el-aside id="app-aside" width="320px" style="padding: 10px 0 0 10px;">
+                    <el-card class="box-card">
+                        <div slot="header" class="clearfix">
+                          <span>操作</span>
+                        </div>
+                        <el-form onsubmit="return false;" :inline="false" size="mini" label-width="70px">
+                            <el-form-item label="套装编号">
+                                <el-input v-model="suitCode" placeholder="228075" maxlength="6">
+                                </el-input>
+                            </el-form-item>
+                            <el-form-item>
+                                <el-button type="primary" @click="queryHandler" :disabled="!suitCode.length">查看</el-button>
+                                <el-button type="" @click="printHandler" :disabled="!suitCode.length">打印</el-button>
+                            </el-form-item>
+                          </el-form>
+                      </el-card>
+                </el-aside>
+                <el-main style="height: 100%; overflow: hidden; padding: 10px 0 0 10px;">
+                    <iframe id="source-list-iframe" src="product/suit/preview.html" name="source-list" style="border: none; height: 100%; width: 100%;"></iframe>
+                </el-main>
+            </el-container>
+        </div>
+		<!-- Vue -->
+		<script src="https://lf6-cdn-tos.bytecdntp.com/cdn/expire-1-M/vue/2.6.14/vue.min.js" type="application/javascript"></script>
+        <script type="text/javascript">window.Vue || document.write('<script type="text/javascript" src="ajax/libs/vue/2.6.12/vue.min.js"><\/script>');</script>
+        <!-- Element UI -->
+        <script src="https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/element-ui/2.15.7/index.min.js" type="application/javascript"></script>
+        <script type="text/javascript">
+        window.ELEMENT || document.write(
+            '<link rel="stylesheet" href="ajax/libs/element-ui/2.15.7/theme-chalk/index.min.css"/>'
+            +'<script type="text/javascript" src="ajax/libs/element-ui/2.15.7/index.min.js"><\/script>'
+        );
+        </script>
+        <!-- CryptoJS -->
+        <script src="https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/crypto-js/4.1.1/crypto-js.min.js" type="application/javascript"></script>
+        <script type="text/javascript">window.CryptoJS || document.write('<script type="text/javascript" src="ajax/libs/crypto-js/4.1.1/crypto-js.min.js"><\/script>');</script>
+        <!-- Axios -->
+        <script src="https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/axios/0.26.0/axios.min.js" type="application/javascript"></script>
+        <script type="text/javascript">window.axios || document.write('<script type="text/javascript" src="ajax/libs/axios/0.21.1/axios.min.js"><\/script>');</script>
+		<!-- <script type="text/javascript" src="assets/js/base.js"></script> -->
+        <script type="text/javascript" src="product/suit/index.js"></script>
+	</body>
+</html>

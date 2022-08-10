@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <base href="../../" />
+    <meta charset="utf-8">
+    <title>套装清单</title>
+    <link href="/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <style type="text/css">/* 为了提高当前页面的加载效率， 不使用独立的css/js文件 */
+        *{margin:0; padding:0; font-size:14px; font-family:-apple-system,BlinkMacSystemFont,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei","Helvetica Neue",Helvetica,Arial,sans-serif}
+		[v-cloak]{display: none;}
+        .page{width:940px; margin:0 auto 10px auto; page-break-after: always;}
+        .header .title{height:80px;}
+        .header h1{text-align:center; font-size:36px; /*letter-spacing: 0.6em;*/ line-height: 80px;}
+        .content{width:100%; margin-top:10px;}
+        table{width:100%;border-collapse: collapse; table-layout: fixed;}
+        tr,td,th{page-break-inside: avoid; }
+        th, td{text-align:center; border:1px solid #000; padding:5px;}
+        th{font-size:16px;}
+        .text-left{text-align:left;}
+        .sku-image{width:100%;}
+        h1{margin:0; padding:0;}
+        .desc{margin-top: 10px; line-height:24px; font-size:16px;}
+        .desc,.desc p,.desc span{line-height:24px; font-size:16px;}
+    </style>
+</head>
+<body>
+    <div id="app" v-cloak>
+        <div class="page">
+            <div class="header">
+                <div class="title" style="position:relative; padding-bottom:10px; /*border-bottom: 1px solid black;*/">
+                    <h1>{{ suit.name }}</h1>
+                </div>
+                <div v-for="desc in suit.descs" class="desc">
+                    <div v-html="desc" ></div>
+                </div>
+            </div>
+            <div class="content">
+                <p v-for="image in suit.images"><img :src="image"  style="width: 100%;"/></p>
+                
+                <table cellspacing="0" cellpadding="5" style="display:none;">
+                    <thead>
+                        <tr>
+                            <th width="1">序号</th>
+                            <th width="21">图片</th>
+                            <th width="21">编号</th>
+                            <th width="20">数量</th>
+                            <th width="18">规格</th>
+                            <th width="10">颜色</th>
+                            <th width="8">备注</th>
+                            <th width="1">核对</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+						<tr v-for="(item, index) in suit.products">
+							<td>{{ index + 1 }}</td>
+							<td>
+                                <img class="sku-image" :src="item.image" width="100"/>
+							</td>
+							<td>
+								<span>{{ item.code }}</span>
+							</td>
+							<td >
+								<span>{{ item.quantity }}</span>
+							</td>
+							<td>
+								<span>{{ item.size }}</span>
+							</td>
+							<td>
+								<span>{{ item.color }}</span>
+							</td>
+							<td class="text-left">{{ item.desc }}</td>
+							<td>&nbsp;</td>
+						</tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+	</div>
+<!-- Vue -->
+<script src="https://lf6-cdn-tos.bytecdntp.com/cdn/expire-1-M/vue/2.6.14/vue.min.js" type="application/javascript"></script>
+<script type="text/javascript">window.Vue || document.write('<script type="text/javascript" src="ajax/libs/vue/2.6.12/vue.min.js"><\/script>');</script>
+<script type="text/javascript">
+window.vm = new Vue({
+    el: '#app',
+    data: {
+        suit1: {"name": "16mm独角兽戒指18件套",
+        "desc": "戒指先独立包装，然后18个款式每款1只混装",
+        "owner": "qxoom",},
+        products1: [
+            {"code": "22300101", "quantity": "1条", "size": "20mm", "color": "白K", "image": "https://cbu01.alicdn.com/img/ibank/O1CN01zziEzS21HjN95ITni_!!2214033726960-0-cib.jpg", "desc": ""}
+        ],
+        suit: {}
+    },
+    mounted: function () {
+        
+    },
+    methods: {
+
+    }
+});
+</script>
+</body>
+</html>

@@ -1,1 +1,100 @@
-test file
+<!DOCTYPE html>
+<html lang="zh-cn">
+	<head>
+        <meta charset="utf-8"/>
+        <base target="_blank" />
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+        <title>NextOS</title>
+		<link href="assets/image/favicon.ico" rel="shortcut icon" type="image/x-icon"/>
+        <link href="assets/image/favicon.ico" rel="icon"/>
+        <link rel="manifest" href="manifest.webmanifest">
+        <style type="text/css">
+            *{padding: 0; margin: 0; font-size: 12px;}
+            html,body,#app{width: 100%; height: 100%; overflow: hidden;}
+            #app{display: flex; flex-direction: column;}
+            #app-header{padding:0 10px; height: 29px; overflow: hidden; background-color: #363636; color: #999; display: flex; /*border-bottom: 0.5px solid #eee;*/}
+            #app-header .userinfo-container{width: 200px; line-height: 29px; color: #ff7300;}
+            #app-header .menu-container{flex-grow: 1; width: 100%; overflow-x: auto;}
+            #app-header .menu-container ul{white-space: nowrap;}
+            #app-header .menu-container ul, #app-header .menu-container li{padding: 0; margin: 0; height: 100%;}
+            #app-header .menu-container li{list-style: none; display: inline-block; padding: 0 5px; }
+            #app-header .menu-container li a{color: #999; line-height: 29px; text-decoration: none;}
+            #app-header .menu-container li:hover,#app-header .menu-container li.hover{background-color: white;}
+            #app-header .menu-container li:hover a,#app-header .menu-container li.hover a{color: black;}
+            #app-content{flex-grow: 1; overflow: hidden;}
+            #content-iframe{width: 100%; height: 100%; overflow: auto; border: none;padding: 0; margin: 0;}
+        </style>
+	</head>
+	<body>
+        <div id="app">
+            <div id="app-header" height="29px">
+                <div class="userinfo-container">
+                    <el-icon class="el-icon-user-solid"></el-icon>
+                    NextOS
+                </div>
+                <div class="menu-container">
+                    <ul>
+                        
+                        <li>
+                            <a nofollow href="?_path_=product/image/index.html" target="_blank">贴图工具</a>
+                        </li>
+                        <li>
+                            <a nofollow href="?_path_=product/album/index.html" target="_blank">产品相册</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div id="app-content" class="content-main">
+                <iframe id="content-iframe" title="content-iframe" name="content-iframe" ref="printIframe"></iframe>
+            </div>
+        </div>
+        <script type="text/javascript">
+            // if (null === window.localStorage.getItem("username") || null === window.localStorage.getItem("password"))
+            //     window.location.href = 'user/auth/login.html';
+            
+            const params = (new URL(document.location)).searchParams;
+            const path = params.get('_path_') || '404.html';
+            const contentIframe = document.getElementById("content-iframe");
+            // 更新页面标题
+            contentIframe.onload = function() {
+                document.title = this.contentWindow.document.title + ' - ' + document.title;
+            };
+            // 跳转到 _path_ 参数对应的页面
+            contentIframe.src = path;
+
+            // 高亮当前打开的模块对应的菜单项
+            const elements = document.querySelectorAll(".menu-container a");
+            for(const element of elements)
+                element.parentElement.className = element.href.indexOf(path) !== -1 ? "hover" : "";
+
+            /*
+            if('serviceWorker' in navigator)
+            {
+                navigator.serviceWorker.register('./sw.js', {scope: './'}).then(function (registration) {
+                    var serviceWorker;
+                    if (registration.installing) {
+                        serviceWorker = registration.installing;
+                    } else if (registration.waiting) {
+                        serviceWorker = registration.waiting;
+                    } else if (registration.active) {
+                        serviceWorker = registration.active;
+                    }
+                    if (serviceWorker) {
+                        // logState(serviceWorker.state);
+                        serviceWorker.addEventListener('statechange', function (e) {
+                            // logState(e.target.state);
+                        });
+                    }
+                }).catch (function (error) {
+                    // Something went wrong during registration. The service-worker.js file
+                    // might be unavailable or contain a syntax error.
+                });
+                navigator.serviceWorker.ready.then( registration => {
+                    // registration.active.postMessage("Hi service worker");
+                    window.serviceWorker = registration.active;
+                });
+            }
+            */
+        </script>
+	</body>
+</html>
