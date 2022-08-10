@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+    <head>
+        <meta charset="UTF-8" />
+        <title>用户登录</title>
+        <style type="text/css">
+            *{margin:0; padding: 0;}
+            html,body{width: 100%; height: 100%; overflow: hidden;}
+            #container{width: 100%; height: 100%;}
+            #form-wrap{
+                width: 320px;
+                height: 320px;
+                padding: 20px 100px;
+                border: 1px solid #eee;
+                border-radius: 10px;
+                background-color: white;
+                opacity: 0.85;
+                position: fixed;
+                left: calc(50% - 250px);
+                top: calc(50% - 200px);
+            }
+        </style>
+    </head>
+    <body style="background-image: url(https://cn.bing.com/th?id=OHR.PontaDelgada_ZH-CN8596828822_1920x1080.jpg&rf=LaDigue_1920x1080.jpg);">
+        <div id="container">
+            <div id="form-wrap">
+                <div style="font-size: 24px; line-height: 80px; font-weight: 700; letter-spacing: 0.5em; text-align: center;">欢迎登录</div>
+                <div style="font-size:16px; line-height: 36px; width: 100%; display: flex; margin: 30px 0 10px 0;">
+                    <div style="display:inline-block; width: 64px; text-align: left;">用户名：</div>
+                    <div style="display: inline-block; flex-grow: 1;">
+                        <input style="width: calc(100% - 24px); padding: 0px 10px; height: 32px;" id="username" type="text" name="username" />
+                    </div>
+                </div>
+                <div style="font-size:16px; line-height: 36px; width: 100%; display: flex; margin: 30px 0 10px 0;">
+                    <div style="display:inline-block; width: 64px; text-align: left;">密码：</div>
+                    <div style="display: inline-block; flex-grow: 1;">
+                        <input style="width: calc(100% - 24px); padding: 0px 10px; height: 32px;" id="password" type="password" name="password" />
+                    </div>
+                </div>
+                <div style="width: 100%; margin-top: 40px;">
+                    <button onclick="loginBtnClick(event);" style="width: 100%; line-height: 36px; text-align: center; color: white; font-size: 18px; font-weight: 700; background-color: #409EFF; border: 1px solid rgb(49 139 232); border-radius: 3px;">登&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;录</button>
+                </div>
+            </div>
+        </div>
+        <script type="text/javascript" src="../../ajax/lib/crypto-js/4.1.1/crypto-js.min.js"></script>
+        <script type="text/javascript">
+            async function loginBtnClick(event) {
+                event.preventDefault();
+                const username = document.getElementById('username').value;
+                const password = document.getElementById('password').value;
+                if (!username && !password) return false;
+
+                const encrypted = "U2FsdGVkX18zX2v3kmB11nfjJeCw/TDTI3DA4pClfOWUg8BnHNB0J1Z4lmj+Vt6C3PyiFfW8aogrZWUvpi4oGFGlGfiuKQjvwVrqhM6E3W0=";
+                const decrypted = CryptoJS.AES.decrypt(encrypted, username + password);
+                const result = decrypted.toString(CryptoJS.enc.Utf8);
+                if (result.length === 0) return false;
+
+                window.localStorage.setItem('username', username);
+                window.localStorage.setItem('password', password);
+
+                const redirect = getRedirectURL();
+                if (redirect) window.location.href = redirect;
+            }
+
+            function getRedirectURL() {
+                let redirect = (new URL(window.location)).searchParams.get('redirect');
+                return decodeURIComponent(redirect);
+            }
+        </script>
+    </body>
+</html>
