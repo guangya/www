@@ -14,7 +14,7 @@ const vm = new Vue({
         paths: {psRootPath: 'D:\\ps'},
         sourcePath: "",
         // tplPath: "assets/product/image/templates",
-        tplPath: "https//damiu.gitee.io/www/assets/product/image/templates",
+        tplPath: "https://damiu.gitee.io/www/assets/product/image/templates",
         outputPath: "",
         dialogVisible: false,
         dialogImageUrl: '',
